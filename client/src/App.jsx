@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import socket from "./socket/socket";
 import OnlineUsers from "./components/OnlineUsers";
-import ChatWindow from "./components/ChatWindow";
+import ChatWindow from "./components/chat/ChatWindow";
 import Groups from "./components/Groups";
 import CreateGroup from "./components/CreateGroup";
 
