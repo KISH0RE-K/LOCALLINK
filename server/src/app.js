@@ -8,8 +8,10 @@ app.use(cors());
 app.use(express.json());
 
 const usersRoute = require("./routes/users");
+const usernameRoute = require("./routes/username");
 
 app.use("/users", usersRoute);
 app.use("/groups", groupRoutes);
+app.use("/username", usernameRoute);
 
 module.exports = app;

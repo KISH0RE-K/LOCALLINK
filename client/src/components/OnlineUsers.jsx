@@ -2,47 +2,43 @@ import { useEffect, useState } from "react";
 
 function OnlineUsers({ selectedUser, setSelectedUser, setSelectedGroup }) {
   const [users, setUsers] = useState([]);
-  
 
   useEffect(() => {
     const fetchUsers = () => {
       fetch("http://localhost:3000/users")
         .then((response) => response.json())
-        .then((data) => setUsers(data));
+        .then((data) => setUsers(data))
+        .catch(() => {});
     };
 
     fetchUsers();
-
     const interval = setInterval(fetchUsers, 3000);
-
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div>
-      <h2>Online Users</h2>
+      <p className="section-label">People Online</p>
 
       {users.length === 0 ? (
-        <p>No LocalLink users found on this network.</p>
+        <p className="list-empty">No users on this network yet…</p>
       ) : (
         users.map((user) => (
-          <p
+          <div
             key={user.id}
+            className={`list-item ${selectedUser?.id === user.id ? "active" : ""}`}
             onClick={() => {
               setSelectedUser(user);
               setSelectedGroup(null);
             }}
-            style={{ cursor: "pointer" }}
           >
-            🟢 {user.username}
-          </p>
+            <span className="list-item-avatar">
+              {user.username.charAt(0).toUpperCase()}
+            </span>
+            <span className="list-item-name">{user.username}</span>
+            <span className="list-item-dot" />
+          </div>
         ))
-      )}
-
-      {selectedUser && (
-        <div>
-          <h3>Chatting with {selectedUser.username}</h3>
-        </div>
       )}
     </div>
   );

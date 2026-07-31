@@ -1,22 +1,25 @@
-function Groups({ groups, setSelectedGroup, setSelectedUser }) {
+function Groups({ groups, setSelectedGroup, setSelectedUser, selectedGroup }) {
   return (
     <div>
-      <h2>Groups</h2>
+      <p className="section-label">Groups</p>
 
       {groups.length === 0 ? (
-        <p>No groups created.</p>
+        <p className="list-empty">No groups yet.</p>
       ) : (
         groups.map((group) => (
-          <p
+          <div
             key={group.id}
+            className={`list-item ${selectedGroup?.id === group.id ? "active" : ""}`}
             onClick={() => {
               setSelectedGroup(group);
               setSelectedUser(null);
             }}
-            style={{ cursor: "pointer" }}
           >
-            {group.icon} {group.name}
-          </p>
+            <span className="list-item-avatar" style={{ fontSize: "16px" }}>
+              {group.icon}
+            </span>
+            <span className="list-item-name">{group.name}</span>
+          </div>
         ))
       )}
     </div>

@@ -20,16 +20,9 @@ function MessageInput({
 
       setGroupConversations((previous) => {
         const existing = previous[selectedGroup.id] || [];
-
         return {
           ...previous,
-          [selectedGroup.id]: [
-            ...existing,
-            {
-              from: "You",
-              message,
-            },
-          ],
+          [selectedGroup.id]: [...existing, { from: "You", message }],
         };
       });
     } else {
@@ -40,16 +33,9 @@ function MessageInput({
 
       setConversations((previous) => {
         const existing = previous[selectedUser.id] || [];
-
         return {
           ...previous,
-          [selectedUser.id]: [
-            ...existing,
-            {
-              from: "You",
-              message,
-            },
-          ],
+          [selectedUser.id]: [...existing, { from: "You", message }],
         };
       });
     }
@@ -58,23 +44,37 @@ function MessageInput({
   };
 
   return (
-    <>
+    <div className="input-bar">
       <input
+        id="message-input"
         type="text"
-        placeholder="Type a message..."
+        className="input-field"
+        placeholder="Type a message…"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            sendMessage();
-          }
+          if (e.key === "Enter") sendMessage();
         }}
       />
 
-      <button onClick={sendMessage}>
-        Send
+      <button
+        id="send-btn"
+        className="send-btn"
+        onClick={sendMessage}
+        disabled={!message.trim()}
+        aria-label="Send message"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M2 8L14 2L8 14L7 9L2 8Z"
+            fill="white"
+            stroke="white"
+            strokeWidth="1"
+            strokeLinejoin="round"
+          />
+        </svg>
       </button>
-    </>
+    </div>
   );
 }
 

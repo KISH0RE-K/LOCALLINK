@@ -4,9 +4,9 @@ import ChatMessages from "./ChatMessages";
 import MessageInput from "./MessageInput";
 import FileTransfer from "./FileTransfer";
 import TransferProgress from "./TransferProgress";
-import useChatSocket from "./useChatSocket";
+import useChatSocket from "./UseChatSocket";
 
-function ChatWindow({ selectedUser, selectedGroup }) {
+function ChatWindow({ selectedUser, selectedGroup, currentUsername }) {
   const [conversations, setConversations] = useState({});
   const [groupConversations, setGroupConversations] = useState({});
   const [message, setMessage] = useState("");
@@ -29,54 +29,68 @@ function ChatWindow({ selectedUser, selectedGroup }) {
   const [transferStatus, setTransferStatus] = useState("idle");
 
   const currentConversation = isGroupChat
-    ? groupConversations[selectedGroup.id] || []
+    ? groupConversations[selectedGroup?.id] || []
     : conversations[selectedUser?.id] || [];
 
   useChatSocket({
     pendingFile,
     pauseRef,
-
     setPendingFile,
-
     setSelectedFiles,
-
     setIncomingMetadata,
-
     setSendProgress,
-
     setReceiveProgress,
-
     setLastSavedFile,
-
     setIsPaused,
-
     setConversations,
-
     setGroupConversations,
-
     transferStatus,
-
-    setTransferStatus
+    setTransferStatus,
   });
 
+  // Empty state
   if (!selectedUser && !selectedGroup) {
     return (
-      <div>
-        <h2>Select a user or a group to start chatting</h2>
+      <div className="chat-container">
+        <div className="chat-empty">
+          <div className="chat-empty-icon">💬</div>
+          <p className="chat-empty-title">No conversation open</p>
+          <p className="chat-empty-sub">
+            Pick a person or group from the sidebar to start chatting
+          </p>
+        </div>
       </div>
     );
   }
 
+  const displayName = isGroupChat
+    ? `${selectedGroup.icon} ${selectedGroup.name}`
+    : selectedUser.username;
+
+  const avatarLetter = isGroupChat
+    ? selectedGroup.icon
+    : selectedUser.username.charAt(0).toUpperCase();
+
   return (
-    <div>
-      <h2>
-        {isGroupChat
-          ? `Group: ${selectedGroup.name}`
-          : `Chat with ${selectedUser.username}`}
-      </h2>
+    <div className="chat-container">
+      {/* Header */}
+      <div className="chat-header">
+        <div className="chat-header-avatar">
+          {isGroupChat ? selectedGroup.icon : avatarLetter}
+        </div>
+        <div className="chat-header-info">
+          <span className="chat-header-name">{displayName}</span>
+          <span className="chat-header-status">Active now</span>
+        </div>
+      </div>
 
-      <ChatMessages messages={currentConversation} />
+      {/* Messages */}
+      <ChatMessages
+        messages={currentConversation}
+        currentUsername={currentUsername}
+      />
 
+      {/* Transfer progress */}
       <TransferProgress
         sendProgress={sendProgress}
         receiveProgress={receiveProgress}
@@ -86,6 +100,7 @@ function ChatWindow({ selectedUser, selectedGroup }) {
         transferStatus={transferStatus}
       />
 
+      {/* File transfer toolbar */}
       <FileTransfer
         selectedUser={selectedUser}
         isGroupChat={isGroupChat}
@@ -97,9 +112,9 @@ function ChatWindow({ selectedUser, selectedGroup }) {
         setIsPaused={setIsPaused}
         pauseRef={pauseRef}
         setTransferStatus={setTransferStatus}
-
       />
 
+      {/* Message input */}
       <MessageInput
         message={message}
         setMessage={setMessage}
