@@ -450,13 +450,22 @@
   border-color: rgba(124, 106, 255, 0.3);
 }
 
-.msg-bubble {
+.msg-content {
+  display: flex;
+  flex-direction: column;
   max-width: 68%;
+  min-width: 0;
+}
+
+.msg-bubble {
+  width: fit-content;
+  max-width: 100%;
   padding: 10px 14px;
   border-radius: 16px;
   font-size: 13.5px;
   line-height: 1.5;
   word-break: break-word;
+  white-space: pre-wrap;
 }
 
 .msg-row:not(.outgoing) .msg-bubble {

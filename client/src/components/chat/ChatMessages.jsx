@@ -24,7 +24,7 @@ function ChatMessages({ messages, currentUsername }) {
             <span className="msg-sender-avatar">
               {(msg.from || "?").charAt(0).toUpperCase()}
             </span>
-            <div>
+            <div className="msg-content">
               {!isOwn && (
                 <p className="msg-sender-name">{msg.from}</p>
               )}
